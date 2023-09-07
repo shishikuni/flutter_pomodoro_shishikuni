@@ -52,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           child: Column(
             children: [
-              // タイトル
               Container(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -67,6 +66,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.white,
                       ),
                     ),
+                    Text(
+                      'テスト',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -108,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     FloatingActionButton(
                       backgroundColor: Colors.white,
                       child: Icon(
+                        ///後で、このアイコンを消して、スタートボタンと被せて使いたい
                         Icons.stop,
                         color: Color.fromARGB(255, 0, 17, 61),
                       ),
