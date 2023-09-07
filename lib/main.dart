@@ -86,32 +86,104 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+      body:SafeArea(
+        child: Container(
+          child: Column(
+            children: [
+              // タイトル
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      _titleText,
+                      style: TextStyle(fontSize: 30),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              // 時間表示
+              Container(
+                child: Text(
+                  formatTime(),
+                  style: TextStyle(fontSize: 50),
+                ),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              // ボタン
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton(
+                      child: Icon(Icons.play_arrow),
+                      onPressed: !_isStart
+                          ? null
+                          : () {
+                              _isStart = false;
+                              startTimer();
+                            },
+                    ),
+                    SizedBox(width: 50),
+                    FloatingActionButton(
+                      child: Icon(Icons.stop),
+                      onPressed: _isStart
+                          ? null
+                          : () {
+                              setState(() {
+                                resetTimer();
+                              });
+                            },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 1秒ごとにonTimer関数を呼ぶタイマーを開始する関数。
+  void startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), onTimer);
+  }
+
+  // 残り時間を1秒ずつ減らす関数。時間が0になったら、作業時間と休憩時間を切り替える。
+  void onTimer(Timer timer) {
+    if (_current == 0) {
+      setState(() {
+        _isStart = true;
+        _timer.cancel();
+        if (_isWorkTime) {
+          _current = _workTime;
+          _isWorkTime = false;
+          _titleText = "ワークタイム";
+        } else {
+          _current = _brakeTime;
+          _isWorkTime = true;
+          _titleText = "ブレイクタイム";
+        }
+      });
+    } else {
+      setState(() {
+        _current--;
+      });
+    }
+  }
+
+
+
+
           ],
         ),
       ),
