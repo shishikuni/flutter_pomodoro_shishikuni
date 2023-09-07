@@ -46,6 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 0, 17, 61),
+
+      ///色の決定はもう少し後にする
       body: SafeArea(
         child: Container(
           child: Column(
@@ -128,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // 1秒ごとにonTimer関数を呼ぶタイマーを開始する関数。
+  ///現状は、システムを持ってきているけど、余裕があれば、パッケージの方に切り替えたい。
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), onTimer);
   }
