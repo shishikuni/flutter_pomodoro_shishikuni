@@ -1,92 +1,52 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
+// アプリを起動するときに最初に呼ばれる関数。
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
+// アプリの基本設定を行う部分。
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // アプリのタイトルを設定して、MyHomePageをホーム画面として表示する。
     return MaterialApp(
-      title: 'Flutter pomodoro',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Flutter Pomodoro',
+      home: MyHomePage(),
     );
   }
 }
 
+// このアプリのメイン画面。
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  // 休憩時間（5分 = 300秒）
+  int _brakeTime = 300;
+  // 作業時間（25分 = 1500秒）
+  int _workTime = 1500;
+  // 現在の残り秒数
+  int _current = 1500;
+  // 今が作業時間かどうか（休憩時間ならfalse、作業時間ならtrue）
+  bool _isWorkTime = false;
+  // タイマーがスタートしているかどうか
+  bool _isStart = true;
+  // 画面上部に表示されるテキスト（ワークタイムかブレイクタイムか）
+  String _titleText = "ワークタイム";
+  late Timer _timer;
 
   @override
+  // この関数は画面にどのように表示するかを決める部分。
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body:SafeArea(
+      backgroundColor: Color.fromARGB(255, 0, 17, 61),
+      body: SafeArea(
         child: Container(
           child: Column(
             children: [
@@ -100,23 +60,29 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     Text(
                       _titleText,
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                height: 50,
+                height: 40,
               ),
               // 時間表示
               Container(
                 child: Text(
                   formatTime(),
-                  style: TextStyle(fontSize: 50),
+                  style: TextStyle(
+                    fontSize: 130,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               SizedBox(
-                height: 50,
+                height: 30,
               ),
               // ボタン
               Container(
@@ -124,7 +90,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FloatingActionButton(
-                      child: Icon(Icons.play_arrow),
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.play_arrow,
+                        color: Color.fromARGB(255, 0, 17, 61),
+                      ),
                       onPressed: !_isStart
                           ? null
                           : () {
@@ -134,7 +104,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     SizedBox(width: 50),
                     FloatingActionButton(
-                      child: Icon(Icons.stop),
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.stop,
+                        color: Color.fromARGB(255, 0, 17, 61),
+                      ),
                       onPressed: _isStart
                           ? null
                           : () {
@@ -181,17 +155,21 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  // 残り時間を分と秒の形式（例: "25:00"）に変換する関数。
+  String formatTime() {
+    final minutes = (_current / 60).floor().toString().padLeft(2, '0');
+    final seconds = (_current % 60).floor().toString().padLeft(2, '0');
+    return "$minutes:$seconds";
+  }
 
-
-
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+  // タイマーをリセットする関数。
+  void resetTimer() {
+    setState(() {
+      _isStart = true;
+      _timer.cancel();
+      _current = _workTime;
+      _isWorkTime = false;
+      _titleText = "ワークタイム";
+    });
   }
 }
