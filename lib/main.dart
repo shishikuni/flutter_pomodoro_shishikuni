@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_pomodoro_shishikuni/timer.dart';
+import 'package:flutter_pomodoro_shishikuni/views/first_page.dart';
+import 'package:flutter_pomodoro_shishikuni/views/purpose_setting_page.dart';
 
 // アプリを起動するときに最初に呼ばれる関数。
 void main() {
@@ -14,9 +16,10 @@ class MyApp extends StatelessWidget {
     // アプリのタイトルを設定して、MyHomePageをホーム画面として表示する。
     return MaterialApp(
       title: 'Flutter Pomodoro',
-      home: MyHomePage(),
+      home: PurposeSettingPage(),
     );
   }
 }
+
 
 // このアプリのメイン画面。
