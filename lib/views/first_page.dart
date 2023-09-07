@@ -1,13 +1,25 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_pomodoro_shishikuni/timer.dart';
 
-// アプリを起動するときに最初に呼ばれる関数。
+import '../timer.dart';
+
+class FirstPage extends StatefulWidget {
+  const FirstPage({super.key});
+
+  @override
+  State<FirstPage> createState() => _FirstPageState();
+}
+
+class _FirstPageState extends State<FirstPage> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
 void main() {
   runApp(MyApp());
 }
 
-// アプリの基本設定を行う部分。
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,5 +30,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// このアプリのメイン画面。
