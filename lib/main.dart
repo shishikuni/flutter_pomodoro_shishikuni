@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     // アプリのタイトルを設定して、MyHomePageをホーム画面として表示する。
     return MaterialApp(
       title: 'Flutter Pomodoro',
-      home: FirstPage(),
+      home: PurposeSettingPage(),
     );
   }
 }

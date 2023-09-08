@@ -12,7 +12,7 @@ class FirstPage extends StatelessWidget {
           height: 163,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: null
+              image: NetworkImage("https://via.placeholder.com/163x163"),
               fit: BoxFit.fill,
             ),
           ),
